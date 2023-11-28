@@ -27,17 +27,18 @@ def getroad(input):
 
 def gethighway(input):
     #Highway
-    lower_highway = np.array([25, 80, 160], dtype="uint8")
-    upper_highway = np.array([150, 255, 255], dtype="uint8")
+    lower_highway = np.array([15, 70, 160], dtype="uint8")
+    upper_highway = np.array([160, 255, 255], dtype="uint8")
 
 
     highway_mask = cv2.inRange(img, lower_highway, upper_highway)
 
     kernel_highway= np.ones((5, 5), np.uint8)
     closed_mask_highway = cv2.morphologyEx(highway_mask, cv2.MORPH_CLOSE, kernel_highway)
+    closed_mask_highway = cv2.morphologyEx(closed_mask_highway, cv2.MORPH_CLOSE, kernel_highway)
     backtorgb_highway = cv2.cvtColor(closed_mask_highway,cv2.COLOR_GRAY2RGB)
 
-    backtorgb_highway[np.all(backtorgb_highway == (255, 255, 255), axis=-1)] = (0,165,255) #this is in bgr!
+    backtorgb_highway[np.all(backtorgb_highway == (255, 255, 255), axis=-1)] = (0,255,255) #this is in bgr!
     return backtorgb_highway
 
 def getgreen(input):
@@ -59,8 +60,8 @@ def combine_highway_and_road(img_highway, img_road):
     highway_hsv = cv2.cvtColor(img_highway, cv2.COLOR_BGR2HSV)
 
     # Define the range of orange color in HSV
-    lower_orange = np.array([10, 100, 100])
-    upper_orange = np.array([20, 255, 255])
+    lower_orange = np.array([10, 1, 1])
+    upper_orange = np.array([50, 255, 255])
 
     # Create a mask for pixels in the orange range
     orange_mask = cv2.inRange(highway_hsv, lower_orange, upper_orange)
