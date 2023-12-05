@@ -15,8 +15,6 @@ def getroad(input):
     kernel = np.ones((5, 5), np.uint8)
     closed = cv2.morphologyEx(road_mask, cv2.MORPH_CLOSE, kernel)
 
-
-
     # Remove small white dots in the black region
     kernel_open = np.ones((2, 2), np.uint8)
     closed = cv2.morphologyEx(closed, cv2.MORPH_OPEN, kernel_open, iterations=1)
@@ -33,13 +31,13 @@ def getroad(input):
 
 def gethighway(input):
     #Highway
-    lower_highway = np.array([10, 70, 100], dtype="uint8")
+    lower_highway = np.array([20, 70, 150], dtype="uint8")
     upper_highway = np.array([165, 255, 255], dtype="uint8")
 
 
     highway_mask = cv2.inRange(img, lower_highway, upper_highway)
 
-    kernel_highway= np.ones((2, 2), np.uint8)
+    kernel_highway= np.ones((1, 1), np.uint8)
     closed_mask_highway = cv2.morphologyEx(highway_mask, cv2.MORPH_CLOSE, kernel_highway, iterations=2)
     
     # Remove small white dots in the black region
@@ -47,10 +45,10 @@ def gethighway(input):
     closed = cv2.morphologyEx(closed_mask_highway, cv2.MORPH_OPEN, kernel_open, iterations=2)
 
     kernel_close = np.ones((1,1), np.uint8)
-    result_highway = cv2.morphologyEx(closed, cv2.MORPH_CLOSE, kernel_close, iterations=3)
+    result_highway = cv2.morphologyEx(closed, cv2.MORPH_CLOSE, kernel_close, iterations=2)
 
     kernel_dilate = np.ones((2, 2), np.uint8)  # You can adjust the kernel size as needed
-    expanded_highway = cv2.dilate(result_highway, kernel_dilate, iterations=5)
+    expanded_highway = cv2.dilate(result_highway, kernel_dilate, iterations=4)
 
     backtorgb_highway = cv2.cvtColor(expanded_highway,cv2.COLOR_GRAY2RGB)
 
@@ -211,9 +209,9 @@ def getblack(input): #black should be buildings rest
     black_hsv = cv2.cvtColor(input, cv2.COLOR_BGR2HSV)
     black_mask = cv2.inRange(black_hsv, lower_black, upper_black)
 
-    kernel_black= np.ones((2, 2), np.uint8)
-    closed_mask_black = cv2.morphologyEx(black_mask, cv2.MORPH_CLOSE, kernel_black)
-    backtorgb_black = cv2.cvtColor(closed_mask_black,cv2.COLOR_GRAY2RGB)
+    #kernel_black= np.ones((2, 2), np.uint8)
+    #closed_mask_black = cv2.morphologyEx(black_mask, cv2.MORPH_CLOSE, kernel_black)
+    backtorgb_black = cv2.cvtColor(black_mask,cv2.COLOR_GRAY2RGB)
 
     backtorgb_black[np.all(backtorgb_black == (255, 255, 255), axis=-1)] = (255,255,0) #this is in bgr!
     return backtorgb_black
@@ -261,13 +259,12 @@ def addtobase(img1, img_changed):
     return img1
 # Read the image
 
-test = input("input the amount of images you wish to process")
-test2 = input("input the starting index")
-x = range(int(test)+1)
+test = input("input the amount of images you wish to process: ")
+test2 = input("input the starting index: ")
+x = range(int(test))
 for n in x:
     index:int = int(test2)+n
     img = cv2.imread("maps\\maps\\train\\"+str(index)+".jpg")
-    
     road = getroad(img)
     highway = gethighway(img)
     roadandhighway = combine_highway_and_road(highway, road)
@@ -285,14 +282,11 @@ for n in x:
     #cv2.imshow('Base Image', cv2.imread("maps\\maps\\train\\"+str(index)+".jpg"))
     #cv2.imshow("Buildings", final2)
 
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
+
     # SAVING
     savingpath = "maps\\maps\\train_processed\\"+str(index)+".jpg"
     cv2.imwrite(savingpath, final2)
 
-    #cv2.waitKey(0)
-    #cv2.destroyAllWindows()
-
-
-#TODO
-#BROWN ROADS CANT REALLY BE FOUND YET
-#BLACK = URBAN?/HOUSING -> REST
+    
