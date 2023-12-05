@@ -2,6 +2,17 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import colorsys
+import argparse
+
+
+# Argeparsing
+parser = argparse.ArgumentParser(description='How many images do you want to process? and the starting index of the images? and the type of images?')
+parser.add_argument('--amount', type=int, default=1, help='amount of images to process', required=True)
+parser.add_argument('--start', type=int, default=1, help='starting index', required=True)
+parser.add_argument('--type', type=str, default="train", help='train or val', required=True)
+parser.add_argument('--show', type=bool, default=False, help='show the images', required=False)
+
+args = parser.parse_args()
 
 
 def getroad(input):
@@ -259,12 +270,14 @@ def addtobase(img1, img_changed):
     return img1
 # Read the image
 
-test = input("input the amount of images you wish to process: ")
-test2 = input("input the starting index: ")
+test = args.amount
+test2 = args.start
+typerunning = args.type
+show = args.show
 x = range(int(test))
 for n in x:
     index:int = int(test2)+n
-    img = cv2.imread("maps\\maps\\train\\"+str(index)+".jpg")
+    img = cv2.imread("maps\\maps\\" + typerunning + "\\"+str(index)+".jpg")
     road = getroad(img)
     highway = gethighway(img)
     roadandhighway = combine_highway_and_road(highway, road)
@@ -279,14 +292,15 @@ for n in x:
     addedbuildings = add_black(buildings, addedhousing)
     final2 = addtobase(img, crop(addedbuildings))
     #show
-    #cv2.imshow('Base Image', cv2.imread("maps\\maps\\train\\"+str(index)+".jpg"))
-    #cv2.imshow("Buildings", final2)
+    if show:
+        cv2.imshow('Base Image', cv2.imread("maps\\maps\\"+typerunning+"\\"+str(index)+".jpg"))
+        cv2.imshow("Buildings", final2)
 
-    #cv2.waitKey(0)
-    #cv2.destroyAllWindows()
-
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
     # SAVING
-    savingpath = "maps\\maps\\train_processed\\"+str(index)+".jpg"
-    cv2.imwrite(savingpath, final2)
+    else:
+        savingpath = "maps\\maps\\"+typerunning+"_processed\\"+str(index)+".jpg"
+        cv2.imwrite(savingpath, final2)
 
     
