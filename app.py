@@ -3,6 +3,9 @@ import customtkinter as ctk
 from tkinter.colorchooser import askcolor
 from tkinter import messagebox, filedialog
 from PIL import ImageGrab
+from PIL import Image
+import os
+
 
 class Paint(object):
 
@@ -12,7 +15,6 @@ class Paint(object):
     def __init__(self):
         self.root = ctk.CTk()
 
-                            
         self.pen_button = ctk.CTkButton(self.root, text='fill', command=self.fill)
         self.pen_button.grid(row=0, column=0)
 
@@ -133,11 +135,9 @@ class Paint(object):
                                capstyle=ROUND, smooth=TRUE, splinesteps=36)
         self.c.unbind('<Button-1>', self.boundlinedraw)
 
-
     def setupline(self):
         self.c.unbind_all('<Button-1>')
         self.boundline = self.c.bind('<Button-1>', self.start_line)
-        
 
     def endofstartline(self, event):
         self.c.unbind_all('<Button-1>')
@@ -170,7 +170,7 @@ class Paint(object):
 
             # Capture the content of the canvas as an image
             image = ImageGrab.grab((x, y, x + width, y + height))
-
+            print(type(image))
             # Ask the user to choose a file name and location
             file_path = filedialog.asksaveasfilename(defaultextension=".jpg", filetypes=[("JPG Files", "*.jpg")])
 
@@ -180,6 +180,17 @@ class Paint(object):
                 messagebox.showinfo("Export Successful", "Canvas exported as JPG successfully.")
         except Exception as e:
             messagebox.showerror("Export Failed", f"An error occurred while exporting the canvas: {str(e)}")
+
+        self.outputimage = Toplevel(height=600, width=600)
+        self.outputimage.title("Output Image")
+        #load in tt.png
+        image_file = "tt.png" #TODO -> CHANGE TO ACTUAL OUTPUT IMAGE :D
+        #with Image.open(image_file) as image_location:
+        #NOW IT JUST USES THE INPUT IMAGE    
+        with image as image_location:
+            output_image = ctk.CTkImage(light_image=image_location, dark_image=image_location, size=(600, 600))
+            output_image_button = ctk.CTkButton(self.outputimage, image=output_image, text="", state="disabled",anchor="center", height=600, width=600, fg_color="transparent", bg_color="transparent")
+            output_image_button.grid_configure(column=0, row=0, sticky="ew")
 
 
 if __name__ == '__main__':
