@@ -9,7 +9,7 @@ import argparse
 parser = argparse.ArgumentParser(description='How many images do you want to process? and the starting index of the images? and the type of images?')
 parser.add_argument('--amount', type=int, default=1, help='amount of images to process', required=True)
 parser.add_argument('--start', type=int, default=1, help='starting index', required=True)
-parser.add_argument('--type', type=str, default="train", help='train or val', required=True)
+parser.add_argument('--type', type=str, default="train", help='train or val or tmp', required=True)
 parser.add_argument('--show', type=bool, default=False, help='show the images', required=False)
 
 args = parser.parse_args()
@@ -68,8 +68,8 @@ def gethighway(input):
 
 def getgreen(input):
 
-    lower_green = np.array([40, 40, 40])
-    upper_green = np.array([80, 255, 255])
+    lower_green = np.array([30, 30, 30])
+    upper_green = np.array([255, 255, 255])
 
     green_hsv = cv2.cvtColor(input, cv2.COLOR_BGR2HSV)
     green_mask = cv2.inRange(green_hsv, lower_green, upper_green)
@@ -277,7 +277,8 @@ show = args.show
 x = range(int(test))
 for n in x:
     index:int = int(test2)+n
-    img = cv2.imread("maps\\maps\\" + typerunning + "\\"+str(index)+".jpg")
+    img = cv2.imread("maps\\maps\\tmp\\out1.jpg")
+    #img = cv2.imread("maps\\maps\\" + typerunning + "\\"+str(index)+".jpg")
     road = getroad(img)
     highway = gethighway(img)
     roadandhighway = combine_highway_and_road(highway, road)
@@ -293,7 +294,8 @@ for n in x:
     final2 = addtobase(img, crop(addedbuildings))
     #show
     if show:
-        cv2.imshow('Base Image', cv2.imread("maps\\maps\\"+typerunning+"\\"+str(index)+".jpg"))
+        
+        cv2.imshow('Base Image', cv2.imread("maps\\maps\\tmp\\out1.jpg"))
         cv2.imshow("Buildings", final2)
 
         cv2.waitKey(0)

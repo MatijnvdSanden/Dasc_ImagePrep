@@ -13,34 +13,36 @@ class Paint(object):
     DEFAULT_COLOR = 'White'
 
     def __init__(self):
+        ctk.set_default_color_theme("green")
         self.root = ctk.CTk()
+        self.root.title("Pix2Pix Maps Application")
 
         self.pen_button = ctk.CTkButton(self.root, text='fill', command=self.fill)
         self.pen_button.grid(row=0, column=0)
 
         self.color_button = ctk.CTkButton(self.root, text='color', command=self.choose_color)
-        self.color_button.grid(row=1, column=0)
+        self.color_button.grid(row=0, column=1)
 
         self.eraser_button = ctk.CTkButton(self.root, text='save to png', command=self.export_canvas)
-        self.eraser_button.grid(row=2, column=0)
+        self.eraser_button.grid(row=0, column=2)
 
         self.lowend = 5
         self.highend = 40
         self.choose_size_button = ctk.CTkSlider(self.root, from_=self.lowend, to=self.highend, orientation=HORIZONTAL, command=lambda x: self.brushsizeupdate(x),)
         self.choose_size_button.set(0)
-        self.choose_size_button.grid(row=3, column=0)
+        self.choose_size_button.grid(row=1, columnspan=3)
 
         self.slider_label = ctk.CTkLabel(self.root, text=f"Brush Size: {int(self.lowend)}")
-        self.slider_label.grid(row=4, column=0)
+        self.slider_label.grid(row=2, column=0)
 
         self.clearbutton = ctk.CTkButton(self.root, text='clear', command=self.clear)
-        self.clearbutton.grid(row=5, column=0)
+        self.clearbutton.grid(row=3, column=1)
 
         self.linebutton = ctk.CTkButton(self.root, text='line', command=self.setupline)
-        self.linebutton.grid(row=6, column=0)
+        self.linebutton.grid(row=3, column=2)
 
         self.c = ctk.CTkCanvas(self.root, bg='white', width=600, height=600)
-        self.c.grid(rowspan = 7, column = 0)
+        self.c.grid(rowspan = 4, columnspan = 3)
 
         self.setup()
         self.root.mainloop()
