@@ -3,6 +3,9 @@ import numpy as np
 import argparse
 from scipy.stats import mode
 
+##
+#For the love of god, dont change the colors it searches for in Imageprep, it will break everything.
+##
 
 class Imageprep():
     def __init__(self):
@@ -179,7 +182,7 @@ class Imageprep():
 
     def getgrey(self, input): #grey => red = urban
         lower_grey = np.array([0, 0, 1])
-        upper_grey = np.array([255, 255, 238])
+        upper_grey = np.array([255, 55, 238])
         grey_hsv = cv2.cvtColor(input, cv2.COLOR_BGR2HSV)
         grey_mask = cv2.inRange(grey_hsv, lower_grey, upper_grey)
 
@@ -194,7 +197,7 @@ class Imageprep():
         grey_hsv = cv2.cvtColor(img_grey, cv2.COLOR_BGR2HSV)
 
         # Define the range of grey color in HSV
-        lower_grey = np.array([0, 240, 240])
+        lower_grey = np.array([0, 254, 254])
         upper_grey = np.array([0, 255, 255])
 
         # Create a mask for pixels in the orange range
